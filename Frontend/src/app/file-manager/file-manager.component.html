@@ -1,0 +1,35 @@
+<div class="container">
+  <h2>Time-based File Manager</h2>
+  <div class="upload-section">
+    <input type="file" (change)="onFileSelected($event)">
+    <input type="number" min="1" [(ngModel)]="expireMinutes" placeholder="Expire in minutes (optional)">
+    <button (click)="upload()">Upload</button>
+    <span class="message">{{message}}</span>
+  </div>
+  <hr>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th><th>Type</th><th>Size</th><th>Uploaded</th><th>Expires</th><th>Status</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let file of files">
+        <td>{{file.fileName}}</td>
+        <td>{{file.fileType}}</td>
+        <td>{{file.size | number}}</td>
+        <td>{{file.uploadTime | date:'short'}}</td>
+        <td>{{file.expireTime ? (file.expireTime | date:'short') : 'Never'}}</td>
+        <td>
+          <span [ngClass]="{'expired': isExpired(file), 'active': !isExpired(file)}">
+            {{isExpired(file) ? 'Expired' : 'Active'}}
+          </span>
+        </td>
+        <td>
+          <button (click)="download(file.id, file.fileName)" [disabled]="isExpired(file)">Download</button>
+          <button (click)="delete(file.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
